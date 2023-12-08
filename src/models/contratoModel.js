@@ -1,12 +1,14 @@
+// contrato.model.js
 const db = require('../config/db');
 
 class Contrato {
-  constructor(id, pdfContrato, estado, clienteId, detalleContratoId) {
+  constructor(id, pdfContrato, estado, tipoContrato, fechaRegistro, financieroId) {
     this.id = id;
     this.pdfContrato = pdfContrato;
     this.estado = estado;
-    this.clienteId = clienteId;
-    this.detalleContratoId = detalleContratoId;
+    this.tipoContrato = tipoContrato;
+    this.fechaRegistro = fechaRegistro;
+    this.financieroId = financieroId;
   }
 
   static async getAll() {
@@ -29,18 +31,18 @@ class Contrato {
     }
   }
 
-  static async create(pdfContrato, estado) {
-    const query = 'INSERT INTO Contrato (pdf_contrato, estado) VALUES (?, ?)';
+  async create() {
+    const query = 'INSERT INTO Contrato (pdf_contrato, estado, tipo_contrato, fecha_registro, financiero_id) VALUES (?, ?, ?, NOW(), ?)';
     try {
-      const result = await db.query(query, [pdfContrato, estado]);
+      const result = await db.query(query, [this.pdfContrato, this.estado, this.tipoContrato, this.financieroId]);
       return result.insertId;
     } catch (error) {
       console.error('Error al crear un nuevo contrato en la base de datos:', error);
       throw new Error('Error al crear un nuevo contrato.');
     }
+    
   }
-
-
+  
   static async updateState(id, newState) {
     const query = 'UPDATE Contrato SET estado = ? WHERE id = ?';
     try {

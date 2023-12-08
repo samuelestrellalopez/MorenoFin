@@ -1,37 +1,32 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Previsualización de Contratos</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-  <style>
-    /* Agrega estilos según tus preferencias */
-    #previewFrame {
-      width: 100%;
-      height: 500px;
-      border: 1px solid #ccc;
-    }
-  </style>
+  <title>Subir Contrato</title>
+  <!-- Agrega los enlaces a los archivos CSS de Bootstrap -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
   <div class="container mt-5">
-    <h1 class="mb-4">Previsualización de Contratos</h1>
-
-    <!-- Formulario para subir contrato -->
-    <form id="contratoForm" class="mb-4">
-      <div class="form-group">
-        <label for="pdfContrato">Subir Contrato (PDF):</label>
-        <input type="file" class="form-control-file" id="pdfContrato" accept=".pdf">
+    <h2>Subir Contrato</h2>
+    <form id="contratoForm">
+      <div class="mb-3">
+        <label for="pdfContrato" class="form-label">PDF Contrato</label>
+        <input type="file" class="form-control" id="pdfContrato" name="pdfContrato" required>
       </div>
-      <button type="button" class="btn btn-primary" onclick="subirContrato()">Subir Contrato</button>
+      <div class="mb-3">
+        <label for="tipoContrato" class="form-label">Tipo de Contrato</label>
+        <input type="text" class="form-control" id="tipoContrato" name="tipoContrato" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Subir Contrato</button>
     </form>
-
-    <!-- Previsualización del contrato -->
-    <iframe src="" id="previewFrame"></iframe>
   </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- Agrega los enlaces a los archivos JS de Bootstrap y tu script personalizado -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

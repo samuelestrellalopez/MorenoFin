@@ -8,15 +8,18 @@ class ContratoService {
   static async getContratoById(id) {
     return await Contrato.getById(id);
   }
-
-  static async createContrato(pdfContrato, estado) {
+  static async createContrato(pdfContrato, estado, financieroId, tipoContrato) {
     try {
-      const contratoId = await Contrato.create(pdfContrato, estado);
+      const contrato = new Contrato(null, pdfContrato, estado, tipoContrato, null, financieroId);
+      const contratoId = await contrato.create();
       return contratoId;
     } catch (error) {
+      console.error('Error al crear un nuevo contrato en la base de datos:', error);
       throw new Error('Error al crear un nuevo contrato.');
     }
   }
+  
+  
   
   static async updateContratoState(id, newState) {
     return await Contrato.updateState(id, newState);

@@ -1,26 +1,26 @@
-// script.js
 
-async function subirContrato() {
-  const pdfContrato = document.getElementById('pdfContrato').files[0];
 
-  try {
-    const formData = new FormData();
-    formData.append('pdfContrato', pdfContrato);
-    formData.append('estado', 'pendiente'); // Estado por defecto
+document.getElementById('contratoForm').addEventListener('submit', function(event) {
+  event.preventDefault();
 
-    const response = await axios.post('http://localhost:3306/api/contratos', formData);
+  const formData = new FormData(this);
 
-    if (response.status === 200) {
-      alert('Contrato subido correctamente. ID del Contrato: ' + response.data.contratoId);
+  // Imprime en la consola para verificar el contenido de formData
+  console.log(formData);
 
-      // Mostrar la previsualización del contrato
-      const previewFrame = document.getElementById('previewFrame');
-      previewFrame.src = response.data.contratoPath;
-    } else {
-      alert('Error al subir el contrato.');
-    }
-  } catch (error) {
-    console.error(error);
-    alert('Error al subir el contrato. Por favor, intenta nuevamente.');
-  }
-}
+  fetch('http://localhost:3306/api/contratos', {
+    method: 'POST',
+    body: formData,
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data);
+    alert('Contrato subido exitosamente');
+  })
+  .catch(error => {
+    console.error('Error al subir el contrato:', error);
+    alert('Error al subir el contrato');
+  });
+});
+
+

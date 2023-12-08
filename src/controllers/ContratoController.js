@@ -1,8 +1,8 @@
+// contrato.controller.js
 const ContratoService = require('../services/contratoService');
 const multer = require('multer');
 const path = require('path');
 
-// Configuración de Multer para almacenar archivos en disco
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/');
@@ -12,9 +12,6 @@ const storage = multer.diskStorage({
     cb(null, uniqueFilename + path.extname(file.originalname));
   }
 });
-
-
-
 
 class ContratoController {
   static async getAllContratos(req, res) {
@@ -37,24 +34,24 @@ class ContratoController {
       res.status(500).json({ error: 'Error al obtener el contrato por ID.' });
     }
   }
-
   static async subirContrato(req, res) {
     try {
+      console.log(req.body); // Agrega esta línea para ver los datos en la consola del servidor
+
       const estado = req.body.estado || 'pendiente';
 
-      // Verificar si el archivo se subió correctamente
+  
       if (!req.file) {
         return res.status(400).json({ error: 'No se proporcionó un archivo válido.' });
       }
-
-      const filePath = req.file.path; // Multer agrega la propiedad 'path' al archivo
-
-      // Puedes guardar el archivo en la base de datos utilizando ContratoService
-      const contratoId = await ContratoService.createContrato(filePath, estado);
-
-      // Devolver la ruta relativa del contrato
+  
+      // Asegúrate de tener un valor de financieroId
+      const financieroId = 1; // Reemplaza esto con la lógica adecuada para obtener el financieroId
+  
+      const contratoId = await ContratoService.createContrato(req.file.path, estado, financieroId, req.body.tipoContrato);
+  
       const relativePath = `/uploads/${req.file.filename}`;
-
+  
       res.json({ contratoId, mensaje: 'Contrato subido exitosamente.', contratoPath: relativePath });
     } catch (error) {
       console.error('Error al subir el contrato:', error);
@@ -62,6 +59,7 @@ class ContratoController {
     }
   }
   
+
   static async updateContratoState(req, res) {
     const { id } = req.params;
     const { newState } = req.body;
@@ -78,17 +76,12 @@ class ContratoController {
     const { id } = req.params;
     try {
       const pdfContrato = await ContratoService.downloadContratoPdf(id);
-      // Lógica para enviar el archivo PDF al cliente
       res.end(pdfContrato);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: 'Error al descargar el contrato en formato PDF.' });
     }
   }
-}
-function generateUniqueFilename(extension) {
-  const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-  return `file_${uniqueSuffix}.${extension}`;
 }
 
 module.exports = ContratoController;

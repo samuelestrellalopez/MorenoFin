@@ -3,16 +3,20 @@ const multer = require('multer');
 const path = require('path');
 const db = require('./config/db');
 const contratoRoutes = require('./routes/contratoRoutes');
-const clienteRoutes = require('./routes/clienteRoutes');
-const detalleContratoRoutes = require('./routes/detalleContratoRoutes');
-const firmaRoutes = require('./routes/firmaRoutes');
+const clienteRoutes = require('./routes/cliente.routes');
+const detalleContratoRoutes = require('./routes/contratoRoutes');
+const firmaRoutes = require('./routes/firma.routes');
 const cors = require('cors');
 const app = express();
+const bodyParser = require('body-parser');
+const financieroRoutes = require('./routes/financiero.routes'); // Corregido aquí
+
 const PORT = process.env.PORT || 3306;
 
 // Habilitar CORS para todos los dominios
 app.use(cors());
-
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // Configurar multer para manejar la subida de archivos
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -31,14 +35,16 @@ app.use('/api', contratoRoutes);
 app.use('/api', clienteRoutes);
 app.use('/api', detalleContratoRoutes);
 app.use('/api', firmaRoutes);
+app.use('/api', financieroRoutes); // Corregido aquí
 
 // Ruta para subir contrato
 app.post('/api/subirContrato', upload.single('contrato'), (req, res) => {
-  // Acceder al archivo subido a través de req.file
-  // Guardar la ruta o realizar otras operaciones según sea necesario
   const filePath = req.file.path;
   res.json({ message: 'Contrato subido correctamente', filePath: filePath });
 });
+
+// Ruta para servir archivos estáticos (previsualizaciones de imágenes)
+app.use('/uploads', express.static(path.join(__dirname, 'src/uploads')));
 
 // Manejo de errores
 app.use((err, req, res, next) => {
